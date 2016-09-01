@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
-using System;
 
 public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -13,68 +12,66 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     CanvasGroup aimCanvas;
     Vector2 aimStartPosition;
     Vector3 quaterPosition;
-    bool quaterIsMoving;
+    Vector3 fromPos;
+    Vector3 toPos;
+    float lerpTime;
 
+    bool quaterIsMoving;
+    bool newRandomPosition;
+
+    Vector3 newPos;
 
     void Start()
     {
         quater.GetComponent<Rigidbody>().isKinematic = true;
         quaterPosition = quater.transform.position;
+        newRandomPosition = true;
     }
 
     void Update()
     {
-
+        RandomQuaterMovement(quater.transform.position);
     }
 
     public void NewQuater()
     {
         quater.GetComponent<Rigidbody>().isKinematic = true;
         quaterPosition = new Vector3(0, 8, -5);
-        quater.transform.rotation = Quaternion.Euler(115, 0, 0);
         quater.transform.position = quaterPosition;
+        newRandomPosition = true;
+        quater.transform.rotation = Quaternion.Euler(115, 0, 0);
         aimCanvas.alpha = 1f;
         aimCanvas.interactable = aimCanvas.blocksRaycasts = true;
     }
 
-
-
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("OnPointerEnter");
         quaterIsMoving = true;
-
     }
+
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown");
 
     }
-
-
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("OnBeginDrag");
         aimStartPosition = eventData.position;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("OnDrag");
-        MoveQuater(eventData.position);
+        MoveQuater(eventData.position, eventData);
         aimStartPosition = eventData.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("OnEndDrag");
-    }
 
+    }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("OnPointerUp");
         quater.GetComponent<Rigidbody>().isKinematic = false;
         aimCanvas.alpha = 0f;
         aimCanvas.interactable = aimCanvas.blocksRaycasts = false;
@@ -82,37 +79,56 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("OnPointerExit");
         quaterIsMoving = false;
     }
 
 
-    void MoveQuater(Vector2 currentAimPosition)
+    void MoveQuater(Vector2 currentAimPosition, PointerEventData data)
     {
         if (quaterIsMoving == false)
             return;
-        var newPos = Vector3.zero;
-        bool moveLeftRight = false;
-        if (aimStartPosition.x - currentAimPosition.x < -5 || aimStartPosition.x - currentAimPosition.x > 5)
-            moveLeftRight = true;
-
-        if (moveLeftRight)
+        newPos = Vector3.zero;
+        if (Mathf.Abs(data.delta.x) > 2)
         {
-            if (aimStartPosition.x - currentAimPosition.x < -1)
-                newPos.x = 0.05f;
-            else if (aimStartPosition.x - currentAimPosition.x > 1)
-                newPos.x = -0.05f;
+            if (aimStartPosition.x - currentAimPosition.x < 0)
+                newPos.x = 0.1f;
+            else if (aimStartPosition.x - currentAimPosition.x > 0)
+                newPos.x = -0.1f;
         }
-        else
+        if (Mathf.Abs(data.delta.y) > 2)
         {
-            if (aimStartPosition.y - currentAimPosition.y < -2)
-                newPos.z = -0.05f;
-            else if (aimStartPosition.y - currentAimPosition.y > 2)
-                newPos.z = 0.05f;
+            if (aimStartPosition.y - currentAimPosition.y < 0)
+                newPos.z = -0.1f;
+            else if (aimStartPosition.y - currentAimPosition.y > 0)
+                newPos.z = 0.1f;
         }
-
-        quater.transform.position = quaterPosition + newPos;
-        quaterPosition = quater.transform.position;
     }
+
+
+    void RandomQuaterMovement(Vector3 quaterPos)
+    {
+        if (quaterIsMoving == false)
+            return;
+        lerpTime += Time.deltaTime / 2;
+        if (newRandomPosition)
+        {
+            var randomPos = new Vector3(Random.Range(-.6f, .6f), 0, Random.Range(-.2f, .2f));
+            toPos = quaterPos + randomPos;
+            fromPos = quaterPos;
+            lerpTime = 0;
+        }
+        toPos += newPos;
+        newRandomPosition = false;
+        quaterPosition = Vector3.Lerp(fromPos, toPos, lerpTime);
+        quater.transform.position = quaterPosition;
+        var dist = Vector3.Distance(quaterPosition, toPos);
+        if (dist < 0.1f)
+        {
+            newRandomPosition = true;
+        }
+
+    }
+
+
 
 }
