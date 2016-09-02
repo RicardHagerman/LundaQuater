@@ -36,7 +36,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     public void NewQuater()
     {
         quater.GetComponent<Rigidbody>().isKinematic = true;
-        quaterPosition = new Vector3(0, 8, -5);
+        quaterPosition = new Vector3(0, 3, -6.5f);
         quater.transform.position = quaterPosition;
         newRandomPosition = true;
         quater.transform.rotation = Quaternion.Euler(115, 0, 0);
@@ -73,6 +73,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     public void OnPointerUp(PointerEventData eventData)
     {
         quater.GetComponent<Rigidbody>().isKinematic = false;
+        quater.GetComponent<Rigidbody>().AddForce(new Vector3(0, -1200, 0));
         aimCanvas.alpha = 0f;
         aimCanvas.interactable = aimCanvas.blocksRaycasts = false;
     }
@@ -98,9 +99,9 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
         if (Mathf.Abs(data.delta.y) > 2)
         {
             if (aimStartPosition.y - currentAimPosition.y < 0)
-                newPos.z = -0.1f;
-            else if (aimStartPosition.y - currentAimPosition.y > 0)
                 newPos.z = 0.1f;
+            else if (aimStartPosition.y - currentAimPosition.y > 0)
+                newPos.z = -0.1f;
         }
     }
 
@@ -116,19 +117,25 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
             toPos = quaterPos + randomPos;
             fromPos = quaterPos;
             lerpTime = 0;
+            newRandomPosition = false;
         }
         toPos += newPos;
-        newRandomPosition = false;
+        Bounds();
         quaterPosition = Vector3.Lerp(fromPos, toPos, lerpTime);
         quater.transform.position = quaterPosition;
-        var dist = Vector3.Distance(quaterPosition, toPos);
-        if (dist < 0.1f)
-        {
-            newRandomPosition = true;
-        }
-
+        newRandomPosition |= lerpTime > 1;
     }
 
-
+    void Bounds()
+    {
+        if (toPos.x < -1.3f)
+            toPos.x = -1.3f;
+        if (toPos.x > 1.3f)
+            toPos.x = 1.3f;
+        if (toPos.z < -8f)
+            toPos.z = -8f;
+        if (toPos.z > -5f)
+            toPos.z = -5f;
+    }
 
 }
