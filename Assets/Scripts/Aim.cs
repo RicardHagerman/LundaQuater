@@ -128,12 +128,12 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
 
     void Bounds()
     {
-        if (toPos.x < -1.3f)
-            toPos.x = -1.3f;
-        if (toPos.x > 1.3f)
-            toPos.x = 1.3f;
-        if (toPos.z < -8f)
-            toPos.z = -8f;
+        if (toPos.x < -0.6f)
+            toPos.x = -0.6f;
+        if (toPos.x > 0.6f)
+            toPos.x = 0.6f;
+        if (toPos.z < -7f)
+            toPos.z = -7f;
         if (toPos.z > -5f)
             toPos.z = -5f;
     }
