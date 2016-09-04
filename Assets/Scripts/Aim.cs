@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.EventSystems;
+using System;
 
 public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
 {
-
+    public static Aim Current;
+    public Action NewRound;
 
     [SerializeField]
     GameObject quater;
@@ -22,6 +23,12 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
 
     Vector3 newPos;
 
+
+    void Awake()
+    {
+        Current = this;
+    }
+
     void Start()
     {
         NewQuater();
@@ -35,7 +42,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     public void NewQuater()
     {
         quater.GetComponent<Rigidbody>().isKinematic = true;
-        quaterPosition = new Vector3(Random.Range(-.3f, .3f), 1, Random.Range(-3f, -4.5f));
+        quaterPosition = new Vector3(UnityEngine.Random.Range(-.45f, .45f), 1, UnityEngine.Random.Range(-2f, -4.5f));
         quater.transform.position = quaterPosition;
         newRandomPosition = true;
         lerpTime = 0;
@@ -43,6 +50,8 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
         aimCanvas.alpha = 1f;
         aimCanvas.interactable = aimCanvas.blocksRaycasts = true;
         quaterIsMoving = true;
+        if (NewRound != null)
+            NewRound();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -74,11 +83,11 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     {
         quaterIsMoving = false;
         quater.GetComponent<Rigidbody>().isKinematic = false;
-        quater.GetComponent<Rigidbody>().AddForce(new Vector3(0, -50, 0), ForceMode.Impulse);
-        if (quater.transform.position.x > 0.1f)
-            quater.GetComponent<Rigidbody>().AddTorque(0, 2f, 0);
-        if (quater.transform.position.x < -0.1f)
-            quater.GetComponent<Rigidbody>().AddTorque(0, -2f, 0);
+        quater.GetComponent<Rigidbody>().AddForce(new Vector3(0, -11, 0), ForceMode.Impulse);
+        if (quater.transform.position.x > 0.15f)
+            quater.GetComponent<Rigidbody>().AddTorque(0, 0.4f, 0);
+        if (quater.transform.position.x < -0.15f)
+            quater.GetComponent<Rigidbody>().AddTorque(0, -0.4f, 0);
         aimCanvas.alpha = 0f;
         aimCanvas.interactable = aimCanvas.blocksRaycasts = false;
     }
@@ -116,7 +125,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
             return;
         if (newRandomPosition)
         {
-            var randomPos = new Vector3(Random.Range(-.1f, .1f), 0, Random.Range(-.1f, .1f));
+            var randomPos = new Vector3(UnityEngine.Random.Range(-.1f, .1f), 0, UnityEngine.Random.Range(-.1f, .1f));
             toPos = quaterPos + randomPos;
             fromPos = quaterPos;
             lerpTime = 0;
@@ -133,14 +142,14 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
 
     void Bounds()
     {
-        if (toPos.x < -0.35f)
-            toPos.x = -0.35f;
-        if (toPos.x > 0.35f)
-            toPos.x = 0.35f;
+        if (toPos.x < -0.45f)
+            toPos.x = -0.45f;
+        if (toPos.x > 0.45f)
+            toPos.x = 0.45f;
         if (toPos.z < -4.3f)
             toPos.z = -4.3f;
-        if (toPos.z > -2.8f)
-            toPos.z = -2.8f;
+        if (toPos.z > -2f)
+            toPos.z = -2f;
     }
 
 }
