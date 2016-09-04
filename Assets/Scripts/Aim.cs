@@ -14,6 +14,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     Vector3 quaterPosition;
     Vector3 fromPos;
     Vector3 toPos;
+    float dist;
     float lerpTime;
 
     bool quaterIsMoving;
@@ -23,9 +24,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
 
     void Start()
     {
-        quater.GetComponent<Rigidbody>().isKinematic = true;
-        quaterPosition = quater.transform.position;
-        newRandomPosition = true;
+        NewQuater();
     }
 
     void Update()
@@ -36,17 +35,18 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     public void NewQuater()
     {
         quater.GetComponent<Rigidbody>().isKinematic = true;
-        quaterPosition = new Vector3(0, 3, -6f);
+        quaterPosition = new Vector3(Random.Range(-.3f, .3f), 1, Random.Range(-3f, -4.5f));
         quater.transform.position = quaterPosition;
         newRandomPosition = true;
-        quater.transform.rotation = Quaternion.Euler(115, 0, 0);
+        lerpTime = 0;
+        quater.transform.rotation = Quaternion.Euler(105, 0, 0);
         aimCanvas.alpha = 1f;
         aimCanvas.interactable = aimCanvas.blocksRaycasts = true;
+        quaterIsMoving = true;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        quaterIsMoving = true;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -72,15 +72,19 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        quaterIsMoving = false;
         quater.GetComponent<Rigidbody>().isKinematic = false;
-        quater.GetComponent<Rigidbody>().AddForce(new Vector3(0, -7000, 0));
+        quater.GetComponent<Rigidbody>().AddForce(new Vector3(0, -50, 0), ForceMode.Impulse);
+        if (quater.transform.position.x > 0.1f)
+            quater.GetComponent<Rigidbody>().AddTorque(0, 2f, 0);
+        if (quater.transform.position.x < -0.1f)
+            quater.GetComponent<Rigidbody>().AddTorque(0, -2f, 0);
         aimCanvas.alpha = 0f;
         aimCanvas.interactable = aimCanvas.blocksRaycasts = false;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        quaterIsMoving = false;
     }
 
 
@@ -112,16 +116,16 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
             return;
         if (newRandomPosition)
         {
-            var randomPos = new Vector3(Random.Range(-.6f, .6f), 0, Random.Range(-.3f, .3f));
+            var randomPos = new Vector3(Random.Range(-.1f, .1f), 0, Random.Range(-.1f, .1f));
             toPos = quaterPos + randomPos;
             fromPos = quaterPos;
             lerpTime = 0;
+            dist = Vector3.Distance(fromPos, toPos);
             newRandomPosition = false;
         }
         toPos += newPos;
         Bounds();
-        var dist = Vector3.Distance(fromPos, toPos);
-        lerpTime += Time.deltaTime / dist / 10;
+        lerpTime += Time.deltaTime / dist / 3;
         quaterPosition = Vector3.Lerp(fromPos, toPos, lerpTime);
         quater.transform.position = quaterPosition;
         newRandomPosition |= lerpTime > 1;
@@ -129,14 +133,14 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
 
     void Bounds()
     {
-        if (toPos.x < -0.6f)
-            toPos.x = -0.6f;
-        if (toPos.x > 0.6f)
-            toPos.x = 0.6f;
-        if (toPos.z < -7.3f)
-            toPos.z = -7.3f;
-        if (toPos.z > -5f)
-            toPos.z = -5f;
+        if (toPos.x < -0.35f)
+            toPos.x = -0.35f;
+        if (toPos.x > 0.35f)
+            toPos.x = 0.35f;
+        if (toPos.z < -4.3f)
+            toPos.z = -4.3f;
+        if (toPos.z > -2.8f)
+            toPos.z = -2.8f;
     }
 
 }
