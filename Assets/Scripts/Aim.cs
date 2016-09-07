@@ -42,11 +42,11 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     public void NewQuater()
     {
         quater.GetComponent<Rigidbody>().isKinematic = true;
-        quaterPosition = new Vector3(UnityEngine.Random.Range(-.45f, .45f), 1, UnityEngine.Random.Range(-2f, -4.5f));
+        quaterPosition = new Vector3(UnityEngine.Random.Range(-.45f, .45f), 1, UnityEngine.Random.Range(-2f, -4.24f));
         quater.transform.position = quaterPosition;
         newRandomPosition = true;
         lerpTime = 0;
-        quater.transform.rotation = Quaternion.Euler(105, 0, 0);
+        quater.transform.rotation = Quaternion.Euler(195, 0, 180);
         aimCanvas.alpha = 1f;
         aimCanvas.interactable = aimCanvas.blocksRaycasts = true;
         quaterIsMoving = true;
@@ -83,11 +83,11 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     {
         quaterIsMoving = false;
         quater.GetComponent<Rigidbody>().isKinematic = false;
-        quater.GetComponent<Rigidbody>().AddForce(new Vector3(0, -11, 0), ForceMode.Impulse);
+        quater.GetComponent<Rigidbody>().AddForce(new Vector3(-.6f, -10, 0), ForceMode.Impulse);
         if (quater.transform.position.x > 0.15f)
-            quater.GetComponent<Rigidbody>().AddTorque(0, 0.4f, 0);
+            quater.GetComponent<Rigidbody>().AddForce(new Vector3(1, 0, 0), ForceMode.Impulse);
         if (quater.transform.position.x < -0.15f)
-            quater.GetComponent<Rigidbody>().AddTorque(0, -0.4f, 0);
+            quater.GetComponent<Rigidbody>().AddForce(new Vector3(-1, 0, 0), ForceMode.Impulse);
         aimCanvas.alpha = 0f;
         aimCanvas.interactable = aimCanvas.blocksRaycasts = false;
     }
@@ -142,12 +142,12 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
 
     void Bounds()
     {
-        if (toPos.x < -0.45f)
-            toPos.x = -0.45f;
-        if (toPos.x > 0.45f)
-            toPos.x = 0.45f;
-        if (toPos.z < -4.3f)
-            toPos.z = -4.3f;
+        if (toPos.x < -0.50f)
+            toPos.x = -0.50f;
+        if (toPos.x > 0.55f)
+            toPos.x = 0.55f;
+        if (toPos.z < -5f)
+            toPos.z = -5f;
         if (toPos.z > -2f)
             toPos.z = -2f;
     }
