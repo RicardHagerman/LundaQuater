@@ -42,7 +42,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     public void NewQuater()
     {
         quater.GetComponent<Rigidbody>().isKinematic = true;
-        quaterPosition = new Vector3(UnityEngine.Random.Range(-.45f, .45f), 1, UnityEngine.Random.Range(-2f, -4.24f));
+        quaterPosition = new Vector3(UnityEngine.Random.Range(-.5f, .5f), 3, UnityEngine.Random.Range(-4.8f, -6f));
         quater.transform.position = quaterPosition;
         newRandomPosition = true;
         lerpTime = 0;
@@ -83,7 +83,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     {
         quaterIsMoving = false;
         quater.GetComponent<Rigidbody>().isKinematic = false;
-        quater.GetComponent<Rigidbody>().AddForce(new Vector3(-.6f, -10, 0), ForceMode.Impulse);
+        quater.GetComponent<Rigidbody>().AddForce(new Vector3(-1f, -11, 0), ForceMode.Impulse);
         if (quater.transform.position.x > 0.15f)
             quater.GetComponent<Rigidbody>().AddForce(new Vector3(1, 0, 0), ForceMode.Impulse);
         if (quater.transform.position.x < -0.15f)
@@ -125,7 +125,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
             return;
         if (newRandomPosition)
         {
-            var randomPos = new Vector3(UnityEngine.Random.Range(-.1f, .1f), 0, UnityEngine.Random.Range(-.1f, .1f));
+            var randomPos = new Vector3(UnityEngine.Random.Range(-.05f, .05f), 0, UnityEngine.Random.Range(-.05f, .05f));
             toPos = quaterPos + randomPos;
             fromPos = quaterPos;
             lerpTime = 0;
@@ -134,7 +134,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
         }
         toPos += newPos;
         Bounds();
-        lerpTime += Time.deltaTime / dist / 3;
+        lerpTime += Time.deltaTime / dist / 5;
         quaterPosition = Vector3.Lerp(fromPos, toPos, lerpTime);
         quater.transform.position = quaterPosition;
         newRandomPosition |= lerpTime > 1;
@@ -146,10 +146,10 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
             toPos.x = -0.50f;
         if (toPos.x > 0.55f)
             toPos.x = 0.55f;
-        if (toPos.z < -5f)
-            toPos.z = -5f;
-        if (toPos.z > -2f)
-            toPos.z = -2f;
+        if (toPos.z < -7f)
+            toPos.z = -7f;
+        if (toPos.z > -4.8f)
+            toPos.z = -4.8f;
     }
 
 }
