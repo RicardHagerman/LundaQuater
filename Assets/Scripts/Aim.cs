@@ -42,6 +42,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     public void NewQuater()
     {
         quater.GetComponent<Rigidbody>().isKinematic = true;
+        quater.GetComponent<Rigidbody>().centerOfMass = Vector3.zero;
         quaterPosition = new Vector3(UnityEngine.Random.Range(-.5f, .5f), 3, UnityEngine.Random.Range(-4.8f, -6f));
         quater.transform.position = quaterPosition;
         newRandomPosition = true;
@@ -83,11 +84,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     {
         quaterIsMoving = false;
         quater.GetComponent<Rigidbody>().isKinematic = false;
-        quater.GetComponent<Rigidbody>().AddForce(new Vector3(-1f, -11, 0), ForceMode.Impulse);
-        if (quater.transform.position.x > 0.15f)
-            quater.GetComponent<Rigidbody>().AddForce(new Vector3(1, 0, 0), ForceMode.Impulse);
-        if (quater.transform.position.x < -0.15f)
-            quater.GetComponent<Rigidbody>().AddForce(new Vector3(-1, 0, 0), ForceMode.Impulse);
+        quater.GetComponent<Rigidbody>().AddForce(new Vector3(0, -11, 0), ForceMode.Impulse);
         aimCanvas.alpha = 0f;
         aimCanvas.interactable = aimCanvas.blocksRaycasts = false;
     }
@@ -125,7 +122,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
             return;
         if (newRandomPosition)
         {
-            var randomPos = new Vector3(UnityEngine.Random.Range(-.05f, .05f), 0, UnityEngine.Random.Range(-.05f, .05f));
+            var randomPos = new Vector3(UnityEngine.Random.Range(-.1f, .1f), 0, UnityEngine.Random.Range(-.05f, .05f));
             toPos = quaterPos + randomPos;
             fromPos = quaterPos;
             lerpTime = 0;
@@ -134,7 +131,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
         }
         toPos += newPos;
         Bounds();
-        lerpTime += Time.deltaTime / dist / 5;
+        lerpTime += Time.deltaTime / dist / 10;
         quaterPosition = Vector3.Lerp(fromPos, toPos, lerpTime);
         quater.transform.position = quaterPosition;
         newRandomPosition |= lerpTime > 1;
@@ -142,12 +139,12 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
 
     void Bounds()
     {
-        if (toPos.x < -0.50f)
-            toPos.x = -0.50f;
-        if (toPos.x > 0.55f)
-            toPos.x = 0.55f;
-        if (toPos.z < -7f)
-            toPos.z = -7f;
+        if (toPos.x < -1f)
+            toPos.x = -1f;
+        if (toPos.x > 1f)
+            toPos.x = 1f;
+        if (toPos.z < -7.1f)
+            toPos.z = -7.1f;
         if (toPos.z > -4.8f)
             toPos.z = -4.8f;
     }
