@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Quater : MonoBehaviour
 {
     Rigidbody RB;
+    public float x;
 
     void Start()
     {
@@ -14,16 +13,15 @@ public class Quater : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-
-        Debug.Log("QUA");
-
-        if (transform.position.x > 0.15f)
-            RB.AddForce(new Vector3(.5f, 0, 0), ForceMode.Impulse);
-        else if (transform.position.x < -0.15f)
-            RB.AddForce(new Vector3(-2, 0, 0), ForceMode.Impulse);
-        else
-            RB.AddForce(new Vector3(-1, 0, 0), ForceMode.Impulse);
-
+        var speed = RB.velocity.x;
+        var middle = 0 + Mathf.Abs(transform.position.x);
+        Debug.Log("QUATER " + x);
+        if (middle < 0.2f)
+            RB.AddForce(new Vector3(-speed + x, 0, 0), ForceMode.Impulse);
+        else if (transform.position.x > 0)
+            RB.AddForce(new Vector3(-speed * 0.5f + x, 0, 0), ForceMode.Impulse);
+        else if (transform.position.x < 0)
+            RB.AddForce(new Vector3(-speed * 1.5f + x, 0, 0), ForceMode.Impulse);
     }
 
 
