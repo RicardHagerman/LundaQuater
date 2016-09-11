@@ -11,17 +11,16 @@ public class Spalsh : MonoBehaviour
     void Start()
     {
         sound = GetComponent<AudioSource>();
-        Aim.Current.NewRound += OnNewRound;
+        QuaterBack.NewRound += OnNewRound;
     }
 
     void OnDisable()
     {
-        Aim.Current.NewRound -= OnNewRound;
+        QuaterBack.NewRound -= OnNewRound;
     }
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("SPALSHHHH");
         sound.Play();
         yay.text = "YAY";
     }

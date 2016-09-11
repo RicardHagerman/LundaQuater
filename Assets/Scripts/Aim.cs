@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using System;
 
 public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public static Aim Current;
-    public Action NewRound;
 
     [SerializeField]
     GameObject quater;
@@ -16,7 +14,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     float startTime;
     float endTime;
 
-    Vector3 quaterPosition;
+    public Vector3 quaterPosition;
 
     void Awake()
     {
@@ -32,13 +30,13 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     {
         quater.GetComponent<Rigidbody>().isKinematic = true;
         quater.GetComponent<Rigidbody>().centerOfMass = Vector3.zero;
-        quaterPosition = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0.18f, UnityEngine.Random.Range(-4.8f, -6f));
+        quaterPosition = new Vector3(0, 2.5f, Random.Range(-4.5f, -6.5f));
         quater.transform.position = quaterPosition;
-        quater.transform.rotation = Quaternion.Euler(210, 0, 180);
+        quater.transform.rotation = Quaternion.Euler(190, 0, 180);
         aimCanvas.alpha = 1f;
         aimCanvas.interactable = aimCanvas.blocksRaycasts = true;
-        if (NewRound != null)
-            NewRound();
+        if (QuaterBack.NewRound != null)
+            QuaterBack.NewRound();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -47,8 +45,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        quater.transform.position = quaterPosition + new Vector3(0, 2.5f, 0);
-        quater.transform.rotation = Quaternion.Euler(195, 0, 180);
+
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -90,10 +87,14 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
         var power = 1f;
         if (x < 20)
             power = 0;
+        //else if (currentPos.x < aimStartPosition.x)
+        //    power = 0 - (x / t) / 400;
+        //else if (currentPos.x > aimStartPosition.x)
+        //    power = 0 + (x / t) / 400;
         else if (currentPos.x < aimStartPosition.x)
-            power = 0 - (x / t) / 400;
+            power = 0 - x / 30;
         else if (currentPos.x > aimStartPosition.x)
-            power = 0 + (x / t) / 400;
+            power = 0 + x / 30;
         if (power > 1.5f)
             power = 1.5f;
         if (power < -1.5f)
@@ -105,9 +106,12 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     {
         var t = endTime - startTime;
         var y = currentPos.y - aimStartPosition.y;
-        var power = 1 - (Mathf.Abs(y) / t) / 200;
-        if (y > 0)
-            power = 0;
+        //var power = 1 - (Mathf.Abs(y) / t) / 150;
+        var power = 1 - Mathf.Abs(y) / 20;
+        if (power > -5)
+            power = -5;
+        if (power < -13)
+            power = -13;
         return power;
     }
 

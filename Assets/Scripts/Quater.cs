@@ -22,6 +22,8 @@ public class Quater : MonoBehaviour
             RB.AddForce(new Vector3(-speed * 0.5f + x, 0, 0), ForceMode.Impulse);
         else if (transform.position.x < 0)
             RB.AddForce(new Vector3(-speed * 1.5f + x, 0, 0), ForceMode.Impulse);
+        if (QuaterBack.FirstBounce != null)
+            QuaterBack.FirstBounce();
     }
 
 
