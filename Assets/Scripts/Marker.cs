@@ -9,16 +9,16 @@ public class Marker : MonoBehaviour
     void OnEnable()
     {
         QuaterBack.FirstBounce += OnFirstBounce;
-        QuaterBack.NewRound += OnNewRound;
+        QuaterBack.NewMarker += OnNewMarker;
     }
 
     void OnDisable()
     {
         QuaterBack.FirstBounce -= OnFirstBounce;
-        QuaterBack.NewRound -= OnNewRound;
+        QuaterBack.NewRound -= OnNewMarker;
     }
 
-    void OnNewRound()
+    void OnNewMarker()
     {
         var qp = Aim.Current.quaterPosition;
         transform.position = new Vector3(qp.x, 0.01f, qp.z);

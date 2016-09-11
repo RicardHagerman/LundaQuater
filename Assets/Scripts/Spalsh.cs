@@ -1,17 +1,14 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class Spalsh : MonoBehaviour
 {
-    [SerializeField]
-    Text yay;
-
     AudioSource sound;
+    bool hit;
 
-    void Start()
+    void OnEnable()
     {
-        sound = GetComponent<AudioSource>();
         QuaterBack.NewRound += OnNewRound;
+        sound = GetComponent<AudioSource>();
     }
 
     void OnDisable()
@@ -19,17 +16,19 @@ public class Spalsh : MonoBehaviour
         QuaterBack.NewRound -= OnNewRound;
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        sound.Play();
-        yay.text = "YAY";
-    }
-
     void OnNewRound()
     {
-        yay.text = "";
+        hit = false;
     }
 
-
+    void OnTriggerEnter(Collider other)
+    {
+        if (hit)
+            return;
+        sound.Play();
+        if (QuaterBack.Hit != null)
+            QuaterBack.Hit();
+        hit = true;
+    }
 
 }
