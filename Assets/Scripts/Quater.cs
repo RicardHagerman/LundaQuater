@@ -5,22 +5,10 @@ public class Quater : MonoBehaviour
     Rigidbody RB;
     public float x;
     int numBounce;
-    bool miss;
 
     void OnEnable()
     {
         RB = GetComponent<Rigidbody>();
-        QuaterBack.Hit += OnHit;
-    }
-
-    void OnDisable()
-    {
-        QuaterBack.Hit -= OnHit;
-    }
-
-    void OnHit()
-    {
-        miss = true;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -28,24 +16,29 @@ public class Quater : MonoBehaviour
         if (collision.gameObject.name == "Table")
         {
             numBounce++;
-            var speed = RB.velocity.x;
+            var speed = RB.velocity;
             var middle = 0 + Mathf.Abs(transform.position.x);
             if (middle < 0.2f)
-                RB.AddForce(new Vector3(-speed + x, 0, 0), ForceMode.Impulse);
-            else if (transform.position.x > 0)
-                RB.AddForce(new Vector3(-speed * 0.5f + x, 0, 0), ForceMode.Impulse);
-            else if (transform.position.x < 0)
-                RB.AddForce(new Vector3(-speed * 1.5f + x, 0, 0), ForceMode.Impulse);
+            {
+                RB.velocity = new Vector3(0, speed.y, speed.z);
+            }
+            else if (transform.position.x >= 0.2f)
+            {
+                RB.velocity = new Vector3(0.4f, speed.y, speed.z);
+                RB.AddForce(new Vector3(x, 0, 0), ForceMode.Impulse);
+            }
+            else if (transform.position.x <= -0.2f)
+            {
+                RB.velocity = new Vector3(-0.4f, speed.y, speed.z);
+                RB.AddForce(new Vector3(x, 0, 0), ForceMode.Impulse);
+            }
+
             if (QuaterBack.FirstBounce != null && numBounce == 1)
             {
                 QuaterBack.FirstBounce();
                 return;
             }
-            if (QuaterBack.Miss != null && miss == false)
-            {
-                QuaterBack.Miss();
-                miss = true;
-            }
+
         }
     }
 

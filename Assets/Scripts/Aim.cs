@@ -124,20 +124,14 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
         // var t = endTime - startTime;
         var x = Mathf.Abs(currentPos.x - aimStartPosition.x);
         var power = 1f;
-        if (x < 40)
-            power = 0;
-        //else if (currentPos.x < aimStartPosition.x)
-        //    power = 0 - (x / t) / 400;
-        //else if (currentPos.x > aimStartPosition.x)
-        //    power = 0 + (x / t) / 400;
-        else if (currentPos.x < aimStartPosition.x)
-            power = 0 - x / 600;
+        if (currentPos.x < aimStartPosition.x)
+            power = 0 - x / 200;
         else if (currentPos.x > aimStartPosition.x)
-            power = 0 + x / 600;
-        if (power > 1.5f)
-            power = 1.5f;
-        if (power < -1.5f)
-            power = -1.5f;
+            power = 0 + x / 200;
+        if (power > 2f)
+            power = 2f;
+        if (power < -2f)
+            power = -2f;
         Debug.Log("POWER   " + power);
         return power;
     }

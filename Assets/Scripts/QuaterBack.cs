@@ -16,6 +16,4 @@ public static class QuaterBack
     public static Action NewMarker;
     public static Action FirstBounce;
     public static Action Hit;
-    public static Action Miss;
-
 }
