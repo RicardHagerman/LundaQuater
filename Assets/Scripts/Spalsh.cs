@@ -1,36 +1,34 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class Spalsh : MonoBehaviour
 {
-    [SerializeField]
-    Text yay;
-
     AudioSource sound;
+    bool hit;
 
-    void Start()
+    void OnEnable()
     {
+        QuaterBack.NewRound += OnNewRound;
         sound = GetComponent<AudioSource>();
-        Aim.Current.NewRound += OnNewRound;
     }
 
     void OnDisable()
     {
-        Aim.Current.NewRound -= OnNewRound;
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("SPALSHHHH");
-        sound.Play();
-        yay.text = "YAY";
+        QuaterBack.NewRound -= OnNewRound;
     }
 
     void OnNewRound()
     {
-        yay.text = "";
+        hit = false;
     }
 
-
+    void OnTriggerEnter(Collider other)
+    {
+        if (hit)
+            return;
+        sound.Play();
+        if (QuaterBack.Hit != null)
+            QuaterBack.Hit();
+        hit = true;
+    }
 
 }
