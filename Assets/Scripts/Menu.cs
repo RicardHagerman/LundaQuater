@@ -13,6 +13,8 @@ public class Menu : MonoBehaviour
     Text yay;
     [SerializeField]
     Text score;
+    [SerializeField]
+    GameObject info;
 
     Coroutine timer;
     int numHits;
@@ -20,8 +22,9 @@ public class Menu : MonoBehaviour
 
     void Start()
     {
+        info.SetActive(false);
         yay.text = "";
-        score.text = " 0  /  0 ";
+        score.text = "";
         QuaterBack.Miss += OnMiss;
         QuaterBack.Hit += OnHit;
         Aim.Current.currentLevel = Level.SHOW;
@@ -66,13 +69,41 @@ public class Menu : MonoBehaviour
         numRounds = 0;
         numHits = 0;
         Aim.Current.currentLevel = Level.BEGINNER;
+        score.text = "";
+        yay.text = "";
+        newGameButton.SetActive(false);
+        foreach (var button in startGameButtons)
+            button.SetActive(true);
+    }
+
+    public void Beginner()
+    {
+        Aim.Current.currentLevel = Level.BEGINNER;
+        info.SetActive(true);
+        StartNewGame();
+    }
+
+    public void Normal()
+    {
+        Aim.Current.currentLevel = Level.NORMAL;
+        StartNewGame();
+    }
+
+    public void Hard()
+    {
+        Aim.Current.currentLevel = Level.HARD;
+        StartNewGame();
+    }
+
+    void StartNewGame()
+    {
+        foreach (var button in startGameButtons)
+            button.SetActive(false);
         if (QuaterBack.FirstQuater != null)
             QuaterBack.FirstQuater();
         if (QuaterBack.NewRound != null)
             QuaterBack.NewRound();
         score.text = "" + numHits + "  /  " + numRounds;
-        yay.text = "";
-        newGameButton.SetActive(false);
     }
 
     void OnMiss()
@@ -101,6 +132,8 @@ public class Menu : MonoBehaviour
 
     IEnumerator TimerCO()
     {
+        if (info.activeInHierarchy)
+            info.SetActive(false);
         if (numRounds >= 3)
         {
             score.text = "" + numHits + "  /  " + numRounds;
@@ -118,7 +151,7 @@ public class Menu : MonoBehaviour
         }
         else
         {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1.5f);
             yay.text = "";
             NewRound();
         }
