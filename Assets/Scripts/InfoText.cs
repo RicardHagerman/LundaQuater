@@ -14,6 +14,7 @@ public class InfoText : MonoBehaviour
 	[SerializeField]
 	GameObject swipeIcon;
 
+	string infoText = "";
 
 	void OnEnable ()
 	{
@@ -39,11 +40,22 @@ public class InfoText : MonoBehaviour
 
 	IEnumerator InfoCO ()
 	{
-		var text1 = "Bounce the coin off the table, into the beer.\nPut your finger on the coin and swipe down.\nThe longer the swipe the greater the bounce.";
-		for (int i = 0; i < text1.Length + 1; i++)
+		switch (PlayerPrefs.GetInt ("Language"))
 		{
-			infoText1.text = "" + text1.Substring (0, i) + "";
-			infoText2.text = "" + text1.Substring (0, i) + "";
+		case 0:
+			infoText = "Studsa myntet på border, ner i ölglaset\nSätt ett finger på myntest och dra neråt\nJu längre du drar desto hårdare studsar myntet";
+			break;
+		case 1:
+			infoText = "Bounce the coin off the table, into the beer.\nPut your finger on the coin and swipe down.\nThe longer the swipe the greater the bounce.";
+			break;
+		case 2:
+			infoText = "Lolunondodabobrorygoggogerorietot äror dodetot bobäsostota\ngoglolugoggog goololugoggog goglolugoggog\naaaaaaaaaaaaaaaaaaaaaa";
+			break;
+		}
+		for (int i = 0; i < infoText.Length + 1; i++)
+		{
+			infoText1.text = "" + infoText.Substring (0, i) + "";
+			infoText2.text = "" + infoText.Substring (0, i) + "";
 			if (i == 67)
 				swipeIcon.SetActive (true);
 			if (i == 120)
