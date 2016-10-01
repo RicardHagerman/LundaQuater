@@ -9,11 +9,11 @@ public class Serializer
 {
 
 
-    public Serializer()
-    {
-        if (Application.platform == RuntimePlatform.IPhonePlayer)
-            Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
-    }
+    //public Serializer()
+    //{
+    //    if (Application.platform == RuntimePlatform.IPhonePlayer)
+    //        Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
+    //}
 
 
     public List<Player> getSavedPlayers(string name)
