@@ -48,7 +48,14 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
     {
         if (quatersInPlay.Count > 0)
             foreach (var q in quatersInPlay)
-                q.GetComponent<Rigidbody>().Sleep();
+            {
+                Rigidbody rb = q.GetComponent<Rigidbody>();
+                if (rb.velocity.magnitude < 0.01f)
+                {
+                    rb.Sleep();
+                }
+
+            }
         bouncePower = 0;
         quater = Instantiate(quaterPrefab, Vector3.zero, Quaternion.identity) as GameObject;
         quatersInPlay.Add(quater);
@@ -60,17 +67,17 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
                 quaterPosition = new Vector3(0f, 3.7f, -8f);
                 break;
             case Level.BEGINNER:
-                quaterPosition = new Vector3(0, 4f, -6.2f);
+                quaterPosition = new Vector3(0, 4f, -5f);
                 break;
             case Level.NORMAL:
-                quaterPosition = new Vector3(0, 4f, Random.Range(-4f, -6.5f));
+                quaterPosition = new Vector3(0, 4f, Random.Range(-3.5f, -6.5f));
                 break;
             case Level.HARD:
-                quaterPosition = new Vector3(Random.Range(-1f, 1f), 4f, Random.Range(-4.5f, -6.5f));
+                quaterPosition = new Vector3(Random.Range(-1f, 1f), 4f, Random.Range(-3.5f, -6.5f));
                 break;
         }
         quater.transform.position = quaterPosition;
-        quater.transform.rotation = Quaternion.Euler(200, 0, 180);
+        quater.transform.rotation = Quaternion.Euler(210, 0, 180);
         if (currentLevel == Level.SHOW)
             return;
         aimCanvas.interactable = aimCanvas.blocksRaycasts = true;
@@ -106,7 +113,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
 
     public void OnEndDrag(PointerEventData eventData)
     {
-
+        quater.transform.rotation = Quaternion.Euler(199, 0, 180);
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -137,7 +144,6 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
             power = 2f;
         if (power < -2f)
             power = -2f;
-        Debug.Log("POWER   " + power);
         return power;
     }
 
