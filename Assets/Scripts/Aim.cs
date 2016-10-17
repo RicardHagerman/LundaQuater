@@ -51,10 +51,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
             {
                 Rigidbody rb = q.GetComponent<Rigidbody>();
                 if (rb.velocity.magnitude < 0.01f)
-                {
                     rb.Sleep();
-                }
-
             }
         bouncePower = 0;
         quater = Instantiate(quaterPrefab, Vector3.zero, Quaternion.identity) as GameObject;
@@ -113,7 +110,7 @@ public class Aim : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandl
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        quater.transform.rotation = Quaternion.Euler(199, 0, 180);
+        quater.transform.rotation = Quaternion.Euler(195, 0, 180);
     }
 
     public void OnPointerUp(PointerEventData eventData)

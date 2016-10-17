@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class Quater : MonoBehaviour
 {
     Rigidbody RB;
     public float x;
     bool firstBounce;
+    Coroutine co;
+
 
     void OnEnable()
     {
@@ -18,8 +21,16 @@ public class Quater : MonoBehaviour
         if (firstBounce)
             return;
         firstBounce = true;
+        if (co != null)
+            StopCoroutine(co);
+        co = StartCoroutine(PuchCO());
+    }
+
+    IEnumerator PuchCO()
+    {
         var speed = RB.velocity;
         var middle = 0 + Mathf.Abs(transform.position.x);
+        yield return new WaitForEndOfFrame();
         RB.AddForce(new Vector3(0, 0, 1f), ForceMode.Impulse);
         RB.freezeRotation = false;
         RB.AddTorque(10, 0, 0);
@@ -40,4 +51,7 @@ public class Quater : MonoBehaviour
         if (QuaterBack.FirstBounce != null)
             QuaterBack.FirstBounce();
     }
+
+
+
 }
